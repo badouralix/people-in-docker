@@ -1,0 +1,52 @@
+version: '2'
+
+services:
+
+  nginx-proxy:
+    image: nginx:1.11
+    networks:
+      - proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+    volumes:
+      - ./nginx-proxy/etc-nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx-proxy/etc-nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx-proxy/etc-nginx/sites-enabled:/etc/nginx/sites-enabled:ro
+      - ./certs:/certs:ro
+      - /etc/localtime:/etc/localtime:ro
+      - nginx-proxy-log:/var/log/nginx
+
+  node-proxy:
+    image: node:6.3
+    command: node /src/app.js
+    environment:
+      - DOCKER_SOCKET=/var/run/docker.sock
+      - LOG_LEVEL=debug
+      - PEOPLE_CONTAINER_IMAGE=nginx:1.11-alpine
+      - PEOPLE_CONTAINER_LOG_SUFFIX=-log
+      - PEOPLE_CONTAINER_PREFIX=people_nginx-
+      - PEOPLE_ETC_NGINX=$PWD/nginx-user/etc-nginx
+      - PORT=8080
+    env_file:
+      - nginx-user/proxy.env
+    expose:
+      - "8080"
+    networks:
+      - proxy
+    restart: always
+    volumes:
+      - ./node-proxy:/src:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/passwd:/etc/passwd:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - node-proxy-log:/var/log/node
+
+volumes:
+  nginx-proxy-log:
+  node-proxy-log:
+
+networks:
+  proxy:
+    driver: bridge
