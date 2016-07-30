@@ -68,11 +68,11 @@ var update_timeout = function (user) {
     var container_name =  docker_wrapper.get_user_container_name(user);
 
     if ( timeout_id.hasOwnProperty(user.username) ) {
-        log.debug("Removing outdated timeout for container " + container_name);
+        log.debug("Updating timeout for container " + container_name);
         clearTimeout(timeout_id[user.username]);
+    } else {
+        log.debug("Setting timeout for container " + docker_wrapper.get_user_container_name(user) + "");
     }
-
-    log.debug("Updating timeout for container " + docker_wrapper.get_user_container_name(user) + "");
 
     timeout_id[user.username] = setTimeout(function () {
         docker_wrapper.stop_container(user);
