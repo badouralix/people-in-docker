@@ -82,12 +82,7 @@ var update_timeout = function (user) {
 
 /**********************************************************************************************************************/
 
-// Root route is forbidden
-router.all('/', function(req, res) {
-    res.sendStatus(403)
-});
-
-// Any other route must start with "~username" ( or "username" )
+// Any valid route must start with "~username" ( or "username" ? )
 router.all(['/~:username', '/~:username/*'], function (req, res) {
     var username = req.params.username;
 
@@ -110,5 +105,11 @@ router.all(['/~:username', '/~:username/*'], function (req, res) {
 
     });
 });
+
+// Other routes are forbidden
+router.all('*', function(req, res) {
+    res.sendStatus(403)
+});
+
 
 module.exports = router;
