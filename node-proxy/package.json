@@ -1,13 +1,13 @@
 {
   "name": "node-proxy",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Ayaz BADOURALY <alphabet@via.ecp.fr>",
+  "author": "Ayaz BADOURALY <ayaz.badouraly@via.ecp.fr>",
   "license": "ISC",
   "dependencies": {
     "dockerode": "^2.2.10",
