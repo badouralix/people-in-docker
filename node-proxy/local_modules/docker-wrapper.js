@@ -96,8 +96,8 @@ var create_container = function (container_name, user, callback) {
         'hostConfig': {
             'binds': [
                 user.homedir + ':/home/' + user.username + ':ro',
-                container_name + log_suffix + ':/var/log/nginx',
-                process.env.PEOPLE_ETC_NGINX + ':/etc/nginx:ro',
+                container_name + log_suffix + ':/var/log/apache2',
+                process.env.PEOPLE_APACHE_CONF + ':/usr/local/apache2/conf/httpd.conf',
                 '/etc/localtime:/etc/localtime:ro'
             ],
             'networkMode': network_name //'container:' + process.env.HOSTNAME doesn't work...

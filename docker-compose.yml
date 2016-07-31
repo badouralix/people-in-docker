@@ -24,13 +24,13 @@ services:
     environment:
       - DOCKER_SOCKET=/var/run/docker.sock
       - LOG_LEVEL=debug
-      - PEOPLE_CONTAINER_IMAGE=nginx:1.11-alpine
+      - PEOPLE_CONTAINER_IMAGE=httpd:2.4-alpine
       - PEOPLE_CONTAINER_LOG_SUFFIX=-log
-      - PEOPLE_CONTAINER_PREFIX=people_nginx-
-      - PEOPLE_ETC_NGINX=$PWD/nginx-user/etc-nginx
+      - PEOPLE_CONTAINER_PREFIX=people_apache-user-
+      - PEOPLE_APACHE_CONF=$PWD/apache-user/httpd.conf
       - PORT=8080
     env_file:
-      - nginx-user/proxy.env
+      - apache-user/proxy.env
     expose:
       - "8080"
     networks:

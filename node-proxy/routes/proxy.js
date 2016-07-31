@@ -22,6 +22,10 @@ const docker_wrapper    = require('../local_modules/docker-wrapper');
 // Create a global variable containing all timeout ids
 var timeout_id = {};
 
+// Get app directory
+var path = require('path');
+var app_dir = path.dirname(require.main.filename);
+
 
 /**********************************************************************************************************************/
 
@@ -108,10 +112,36 @@ router.all(['/~:username', '/~:username/*'], function (req, res) {
     });
 });
 
-// Other routes are forbidden
-router.all('*', function(req, res) {
+router.get('/icons/:icon', function (req, res) {
+    var options = {
+        root: app_dir + '/html/icons/',
+        dotfiles: 'deny',
+        headers: {
+            'x-timestamp': Date.now(),
+            'x-sent': true
+        }
+    };
+
+    res.sendFile(req.params.icon, options, function (err) {
+        if ( err ) {
+            res.sendStatus(err.statusCode);
+        }
+        else {
+            log.debug("Successfully sent " + req.params.icon);
+        }
+    });
+});
+
+// Other routes are forbidden or not defined
+router.all('/', function(req, res) {
     res.sendStatus(403)
 });
 
+router.all('*', function(req, res) {
+    res.sendStatus(404)
+});
+
+
+/**********************************************************************************************************************/
 
 module.exports = router;

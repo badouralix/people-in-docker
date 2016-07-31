@@ -1,7 +1,7 @@
 ## how-to
 
  - indiquer le bon path des certificats dans docker-compose.yml
- - éditer le nginx-user/proxy.env
+ - éditer le apache-user/proxy.env
  - ajouter les conf dans les sites-enabled
  - `npm install` dans node-proxy/
 
@@ -24,19 +24,21 @@
    ( quand le dev sera fini, passer aux fichiers )
  - traiter les people en ~ ( et sans ? )
  - pas grave si le node-proxy redémarre et ne stoppe plus les containers inutilisés : ils seront stoppés à la requête suivante + timeout
+ - on utilise un AliasMatch en plus mod_userdir qui nécessiterait /etc/passwd dans le container apache-user
+ - utiliser le node-proxy pour catch les GET /icons ( moche, archi à revoir... ) : beaucoup plus rapide que faire une requête en plus sur un apache
 
 
 ## to-do
 
  - gérer les cas des containers created / pause / die etc...
- - ajouter un header au passage du proxy à vérifier dans le nginx-alpine
+ - ajouter un header au passage du proxy à vérifier dans le apache-user
  - faire une api permettant de récupérer la liste des user, les routes, etc...
  - proprifier la façon de récupérer le network name
  - workdir dans le docker-compose pour avoir la commande node start
  - attention aux permissions dans les dossiers / fichiers montés
  - essayer de monter des fichiers via l'api docker
  - log la véritable ip du client côté node
- - attention aux permissions des dossiers public_html, private,... ( nginx exécuté par... nginx )
+ - attention aux permissions des dossiers public_html, private,... ( nginx exécuté par... nginx ) ( vérifier le comportement pour apache )
  - logrotate
  - attention UTC dans les logs node-proxy ( moment.js ? )
  - pour le nginx-proxy : https://stackoverflow.com/questions/27959860/how-to-merge-host-folder-with-container-folder-in-docker
@@ -46,11 +48,15 @@
  - utilisation d'un json pour enregistrer les timeout : problablement une erreur quand l'username contient des caractères spéciaux
  - ajouter l'heure de timeout du container dans le log.debug
  - gérer les private et le php
- - utiliser un start-up script pour les nginx-user pour bind le dossier etc-nginx, copier les fichiers et ensuite seulement démarrer nginx ( parce que pour l'instant c'est du caca... )
+ - utiliser un start-up script pour les apache-user pour bind le dossier contenant la conf, copier les fichiers et ensuite seulement démarrer apache
+   ( parce que pour l'instant c'est statique, et il faut spawn un nouveau container pour charger la nouvelle conf... )
  - trouver une solution pour certs/ dans .gitignore et docker-compose.yml ( docker-compose.yml.sample ? )
  - ajouter une license
  - segmenter le projet
  - faire la doc et en anglais !!!!!
+ - faire des sample de conf de sites nginx et apache
+ - rendre le wrapper indépendant du serveur http des user ( attention à ce qui est écrit en dur... )
+ - utiliser le node-proxy pour catcher les erreurs des apache-user
 
 
 ## done

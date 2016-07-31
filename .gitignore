@@ -1,5 +1,5 @@
+apache-user/proxy.env
+apache-user/*.conf
 certs/*
 nginx-proxy/etc-nginx/sites-enabled/*.conf
-nginx-user/proxy.env
-nginx-user/etc-nginx/sites-enabled/*.conf
 node-proxy/node_modules/
