@@ -76,9 +76,11 @@ var update_timeout = function (user) {
 
     timeout_id[user.username] = setTimeout(function () {
         docker_wrapper.stop_container(user);
+        delete timeout_id[user.username];
     }, config.proxy.container_timeout);
 
 };
+
 
 /**********************************************************************************************************************/
 

@@ -67,7 +67,7 @@ var setup_container = function (user, callback) {
 };
 
 var start_container = function (container, container_name, callback) {
-    log.debug("Starting container " + container_name);
+    log.info("Starting container " + container_name);
 
     container.start( function () {
         // weird : start callback doesn't not return updated data and therefore container needs inspect call
@@ -76,7 +76,7 @@ var start_container = function (container, container_name, callback) {
 };
 
 var unpause_container = function (container, container_name, callback) {
-    log.debug("Unpausing container " + container_name);
+    log.info("Unpausing container " + container_name);
 
     container.unpause( function () {
         get_ip_from_container(container, callback);
@@ -131,7 +131,7 @@ var get_ip_from_data = function (data, callback) {
     var networks = data.NetworkSettings.Networks;
 
     if ( Object.keys(networks).length != 1 ) {
-        callback( "An error occured while parsing networks of container " + container_id + " ( probably too many networks )");
+        callback( "An error occured while parsing networks of container " + container_id + " ( probably too many networks )", null );
     } else {
         callback( null, networks[Object.keys(networks)[0]].IPAddress );
     }
@@ -139,7 +139,7 @@ var get_ip_from_data = function (data, callback) {
 
 var stop_container = function (user) {
     var container_name = get_user_container_name(user);
-    log.debug("Stopping container " + container_name);
+    log.info("Stopping container " + container_name);
 
     var container = docker.getContainer(container_name);
     container.inspect( user, function (err, data) {

@@ -7,10 +7,10 @@ var os      = require('os');
 var config  = {};
 
 config.app          = {};
-config.app.port     = process.env.PORT || 8080;
+config.app.port     = process.env.PORT      || 8080;
 
 config.log          = {};
-config.log.level    = process.env.LOG_LEVEL || 'debug';
+config.log.level    = process.env.LOG_LEVEL || 'info';
 
 config.proxy                    = {};
 config.proxy.docker_socket      = process.env.DOCKER_SOCKET                     || '/var/run/docker.sock';
