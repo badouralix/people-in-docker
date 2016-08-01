@@ -34,7 +34,6 @@
  - ajouter un header au passage du proxy à vérifier dans le apache-user
  - faire une api permettant de récupérer la liste des user, les routes, etc...
  - proprifier la façon de récupérer le network name
- - workdir dans le docker-compose pour avoir la commande node start
  - attention aux permissions dans les dossiers / fichiers montés
  - essayer de monter des fichiers via l'api docker
  - log la véritable ip du client côté node
@@ -58,6 +57,7 @@
  - rendre le wrapper indépendant du serveur http des user ( attention à ce qui est écrit en dur... )
  - utiliser le node-proxy pour catcher les erreurs des apache-user
  - remplacer les throw(err) par des log.error(err)
+ - ajouter la possibilité de mettre un robot.txt
 
 
 ## done
@@ -76,6 +76,7 @@
  - éteindre les containers après une certaine durée d'inactivité
  - config pour le timeout ( stop_container )
  - utiliser un env_file pour le docker-compose
+ - workdir dans le docker-compose pour avoir la commande `npm start`
 
 
 ## left aside

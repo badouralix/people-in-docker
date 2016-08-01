@@ -23,7 +23,7 @@ var app     = express();
 // Use morgan to print logs
 var morgan  = require('morgan');
 var fs = require('fs');
-app.use( morgan('combined', {stream: fs.createWriteStream('var/log/node/access.log', {flags: 'a'})}) );
+app.use( morgan('combined', {stream: fs.createWriteStream('/var/log/node/access.log', {flags: 'a'})}) );
 app.use( morgan('dev') );
 
 

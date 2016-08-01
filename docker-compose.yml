@@ -20,7 +20,7 @@ services:
 
   node-proxy:
     image: node:6.3
-    command: node /src/app.js
+    command: npm start
     environment:
       - DOCKER_SOCKET=/var/run/docker.sock
       - LOG_LEVEL=silly
@@ -42,6 +42,7 @@ services:
       - /etc/passwd:/etc/passwd:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - node-proxy-log:/var/log/node
+    working_dir: /src
 
 volumes:
   nginx-proxy-log:
