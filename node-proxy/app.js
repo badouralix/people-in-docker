@@ -13,8 +13,7 @@ var port    = config.app.port;
 // Setup log config
 var log = require('winston');
 log.level = config.log.level;
-log.remove(log.transports.Console);
-log.add(log.transports.Console, { colorize: true });
+log.remove(log.transports.Console).add(log.transports.Console, { colorize: true });
 log.add(log.transports.File, { filename: '/var/log/node/node-proxy.log' });
 
 // Call the packages we need

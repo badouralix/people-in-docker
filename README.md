@@ -46,7 +46,7 @@
  - revoir config.js ( notamment pour config.docker... )
  - traiter err dans la callback de container.stop
  - utilisation d'un json pour enregistrer les timeout : problablement une erreur quand l'username contient des caractères spéciaux
- - ajouter l'heure de timeout du container dans le log.debug
+ - ajouter l'heure de timeout du container dans le log.silly
  - gérer les private et le php
  - utiliser un start-up script pour les apache-user pour bind le dossier contenant la conf, copier les fichiers et ensuite seulement démarrer apache
    ( parce que pour l'instant c'est statique, et il faut spawn un nouveau container pour charger la nouvelle conf... )
@@ -57,6 +57,7 @@
  - faire des sample de conf de sites nginx et apache
  - rendre le wrapper indépendant du serveur http des user ( attention à ce qui est écrit en dur... )
  - utiliser le node-proxy pour catcher les erreurs des apache-user
+ - remplacer les throw(err) par des log.error(err)
 
 
 ## done

@@ -23,7 +23,7 @@ services:
     command: node /src/app.js
     environment:
       - DOCKER_SOCKET=/var/run/docker.sock
-      - LOG_LEVEL=debug
+      - LOG_LEVEL=silly
       - PEOPLE_CONTAINER_IMAGE=httpd:2.4-alpine
       - PEOPLE_CONTAINER_LOG_SUFFIX=-log
       - PEOPLE_CONTAINER_PREFIX=people_apache-user-

@@ -36,7 +36,7 @@ var get_user_container_name = function (user) {
 
 var setup_container = function (user, callback) {
     var container_name = get_user_container_name(user);
-    log.debug("Container name is " + container_name);
+    log.verbose("Targeting container " + container_name);
 
     var container = docker.getContainer(container_name);
     container.inspect( user, function (err, data) {
@@ -58,7 +58,7 @@ var setup_container = function (user, callback) {
             unpause_container(container, container_name, callback);
 
         } else {
-            log.debug("Using existing container");
+            log.debug("Using started container " + container_name);
             get_ip_from_data(data, callback)
 
         }
@@ -84,7 +84,7 @@ var unpause_container = function (container, container_name, callback) {
 };
 
 var create_container = function (container_name, user, callback) {
-    log.debug("Creating container " + container_name);
+    log.info("Creating container " + container_name);
 
     var image_name = config.proxy.image_name;
     var log_suffix = config.proxy.log_suffix;

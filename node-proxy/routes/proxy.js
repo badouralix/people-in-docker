@@ -32,7 +32,7 @@ var app_dir = path.dirname(require.main.filename);
 var route_user = function (user, req, res) {
 
     if ( user.uid < config.proxy.uid_min ) {
-        log.debug("User " + user.username + " is not supposed to be accessible -> aborting task!");
+        log.warn("User " + user.username + " is not supposed to be accessible -> aborting task!");
         res.sendStatus(403);
         return;
     }
@@ -44,7 +44,7 @@ var route_user = function (user, req, res) {
         }
 
         var target = 'http://' + ip + ':80';
-        log.debug("Target for " + user.username + " is " + target);
+        log.silly("Target for " + user.username + " is " + target);
 
         proxy.web(req, res, { target: target }, function (err) {
 
@@ -72,10 +72,10 @@ var update_timeout = function (user) {
     var container_name =  docker_wrapper.get_user_container_name(user);
 
     if ( timeout_id.hasOwnProperty(user.username) ) {
-        log.debug("Updating timeout for container " + container_name);
+        log.silly("Updating timeout for container " + container_name);
         clearTimeout(timeout_id[user.username]);
     } else {
-        log.debug("Setting timeout for container " + docker_wrapper.get_user_container_name(user) + "");
+        log.silly("Setting timeout for container " + docker_wrapper.get_user_container_name(user) + "");
     }
 
     timeout_id[user.username] = setTimeout(function () {
@@ -127,7 +127,7 @@ router.get('/icons/:icon', function (req, res) {
             res.sendStatus(err.statusCode);
         }
         else {
-            log.debug("Successfully sent " + req.params.icon);
+            log.verbose("Successfully sent " + req.params.icon);
         }
     });
 });
