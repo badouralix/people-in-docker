@@ -91,18 +91,20 @@ var create_container = function (container_name, user, callback) {
 
     var create_options = {
         'name': container_name,
+        'labels': {},
+        'cmd': config.proxy.cmd,
         'image': image_name,
+        'workingDir': '/mnt',
         'exposedPorts': {},
         'hostConfig': {
             'binds': [
                 user.homedir + ':/home/' + user.username + ':ro',
-                container_name + log_suffix + ':/var/log/apache2',
-                process.env.PEOPLE_APACHE_CONF + ':/usr/local/apache2/conf/httpd.conf',
+                process.env.PEOPLE_SYNC_DIR + ':/mnt:ro',
+                container_name + log_suffix + ':/var/log',
                 '/etc/localtime:/etc/localtime:ro'
             ],
             'networkMode': network_name //'container:' + process.env.HOSTNAME doesn't work...
-        },
-        'labels' : {}
+        }
     };
     create_options['labels'][config.proxy.labels_prefix + '.automatic_run'] = true.toString();
     create_options['labels'][config.proxy.labels_prefix + '.username'] = user.username;

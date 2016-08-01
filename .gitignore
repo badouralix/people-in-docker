@@ -1,5 +1,7 @@
 node-proxy/node-proxy.env
-apache-user/*.conf
 certs/*
 nginx-proxy/etc-nginx/sites-enabled/*.conf
 node-proxy/node_modules/
+http-user/*
+!http-user/README.md
+!http-user/startup.sh.sample

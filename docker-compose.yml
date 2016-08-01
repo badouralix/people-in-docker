@@ -24,7 +24,7 @@ services:
     environment:
       - DOCKER_SOCKET=/var/run/docker.sock
       - PORT=8080
-      - PEOPLE_APACHE_CONF=$PWD/apache-user/httpd.conf
+      - PEOPLE_SYNC_DIR=$PWD/http-user
     env_file:
       - node-proxy/node-proxy.env
     expose:

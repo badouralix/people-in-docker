@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# This script is run as CMD of each user container.  Thus it may contain
+# all the  necessary steps  to  configure  the container,  such as  file
+# copying and server lauching.
+# See  https://veithen.github.io/2014/11/16/sigterm-propagation.html  to
+# properly handle docker's sigterm
+
+exit 1

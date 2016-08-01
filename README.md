@@ -1,9 +1,10 @@
 ## how-to
 
  - indiquer le bon path des certificats dans docker-compose.yml
- - éditer le apache-user/proxy.env
- - ajouter les conf dans les sites-enabled
+ - éditer le node-proxy/node-proxy.env
+ - ajouter les conf dans le sites-enabled du nginx-proxy
  - `npm install` dans node-proxy/
+ - ajouter la conf dans le http-user et écrire le `startup.sh`
 
 
 ## issues
@@ -24,8 +25,8 @@
    ( quand le dev sera fini, passer aux fichiers )
  - traiter les people en ~ ( et sans ? )
  - pas grave si le node-proxy redémarre et ne stoppe plus les containers inutilisés : ils seront stoppés à la requête suivante + timeout
- - on utilise un AliasMatch en plus mod_userdir qui nécessiterait /etc/passwd dans le container apache-user
  - utiliser le node-proxy pour catch les GET /icons ( moche, archi à revoir... ) : beaucoup plus rapide que faire une requête en plus sur un apache
+ - pour une image httpd : on utilise un AliasMatch dans le httpd.conf en plus mod_userdir qui nécessiterait /etc/passwd
 
 
 ## to-do
@@ -35,7 +36,6 @@
  - faire une api permettant de récupérer la liste des user, les routes, etc...
  - proprifier la façon de récupérer le network name
  - attention aux permissions dans les dossiers / fichiers montés
- - essayer de monter des fichiers via l'api docker
  - log la véritable ip du client côté node
  - attention aux permissions des dossiers public_html, private,... ( nginx exécuté par... nginx ) ( vérifier le comportement pour apache )
  - logrotate
@@ -44,20 +44,18 @@
  - config pour la variable t ( stop_container )
  - revoir config.js ( notamment pour config.docker... )
  - traiter err dans la callback de container.stop
- - utilisation d'un json pour enregistrer les timeout : problablement une erreur quand l'username contient des caractères spéciaux
  - ajouter l'heure de timeout du container dans le log.silly
  - gérer les private et le php
- - utiliser un start-up script pour les apache-user pour bind le dossier contenant la conf, copier les fichiers et ensuite seulement démarrer apache
-   ( parce que pour l'instant c'est statique, et il faut spawn un nouveau container pour charger la nouvelle conf... )
  - trouver une solution pour certs/ dans .gitignore et docker-compose.yml ( docker-compose.yml.sample ? )
  - ajouter une license
  - segmenter le projet
  - faire la doc et en anglais !!!!!
  - faire des sample de conf de sites nginx et apache
- - rendre le wrapper indépendant du serveur http des user ( attention à ce qui est écrit en dur... )
  - utiliser le node-proxy pour catcher les erreurs des apache-user
  - remplacer les throw(err) par des log.error(err)
  - ajouter la possibilité de mettre un robot.txt
+ - ajouter une variable de config pour le workdir des user containers, pour le log dir, pour le dossier dans lequel est monté PEOPLE_SYNC_DIR
+ - prendre en compte les custom entrypoint
 
 
 ## done
@@ -75,11 +73,16 @@
  - séparer le code en un fichier proxy.js et un fichier docker-wrapper.js
  - éteindre les containers après une certaine durée d'inactivité
  - config pour le timeout ( stop_container )
+ - utilisation d'un json pour enregistrer les timeout : problablement une erreur quand l'username contient des caractères spéciaux 
  - utiliser un env_file pour le docker-compose
  - workdir dans le docker-compose pour avoir la commande `npm start`
-
+ - utiliser un start-up script pour les apache-user pour bind le dossier contenant la conf, copier les fichiers et ensuite seulement démarrer apache
+   ( parce que pour l'instant c'est statique, et il faut spawn un nouveau container pour charger la nouvelle conf... )
+ - rendre le wrapper indépendant du serveur http des user ( attention à ce qui est écrit en dur... )
+ 
 
 ## left aside
 
  - faire du haproxy pour le proxy frontal
  - voir pour les stats haproxy ( port 8080 )
+ - essayer de monter des fichiers via l'api docker
