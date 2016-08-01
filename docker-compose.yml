@@ -23,14 +23,10 @@ services:
     command: npm start
     environment:
       - DOCKER_SOCKET=/var/run/docker.sock
-      - LOG_LEVEL=silly
-      - PEOPLE_CONTAINER_IMAGE=httpd:2.4-alpine
-      - PEOPLE_CONTAINER_LOG_SUFFIX=-log
-      - PEOPLE_CONTAINER_PREFIX=people_apache-user-
-      - PEOPLE_APACHE_CONF=$PWD/apache-user/httpd.conf
       - PORT=8080
+      - PEOPLE_APACHE_CONF=$PWD/apache-user/httpd.conf
     env_file:
-      - apache-user/proxy.env
+      - node-proxy/node-proxy.env
     expose:
       - "8080"
     networks:
