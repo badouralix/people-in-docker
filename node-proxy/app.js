@@ -3,8 +3,10 @@
  */
 'use strict';
 
-// BASE SETUP
-// =============================================================================
+
+/**
+ * Base setup
+ **********************************************************************************************************************/
 
 // Setup config
 var config  = require('./config');
@@ -29,24 +31,36 @@ app.use( morgan('dev') );
 var stop_users_containers = require('./local_modules/users-container').trigger_timeouts;
 
 
-// ROUTES FOR OUR API
-// =============================================================================
+/**
+ * Configure routes
+ **********************************************************************************************************************/
 var proxy_router = require('./routes/proxy');
 app.use('/', proxy_router);
 
+var default_router = require('./routes/default');
+app.use('/', default_router);
 
-// START THE SERVER
-// =============================================================================
+
+/**
+ * Start the server
+ **********************************************************************************************************************/
 var server = app.listen( port, function () {
+
     log.info( "Magic happens on port " + port );
+
 }).on('close', function () {
+
     stop_users_containers();
     log.info( "Magic just stopped" );
+
 });
 
 
-// HANDLE SIGTERM
-// =============================================================================
+/**
+ * Handle sigterm
+ **********************************************************************************************************************/
 process.on('SIGTERM', function () {
+
     server.close();
+
 });

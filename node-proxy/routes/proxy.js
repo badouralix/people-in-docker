@@ -13,24 +13,11 @@ var config  = require('../config');
 // Setup log config
 var log = require('winston');
 
-// Create a proxy server with custom application logic
-var http_proxy  = require('http-proxy');
-var proxy       = http_proxy.createProxyServer({});
-
-const passwd_user       = require('passwd-user');
-const docker_wrapper    = require('../local_modules/docker-wrapper');
-const user_route        = require('../local_modules/users-container').user_route;
-
-// Create a global variable containing all timeout ids
-var timeout_id = {};
-
-// Get app directory
-var path    = require('path');
-var app_dir = path.dirname(require.main.filename);
+// Load controller
+const user_route = require('../local_modules/users-container').user_route;
 
 
-
-/*
+/**
  * Define router
  **********************************************************************************************************************/
 
@@ -60,38 +47,9 @@ router.param('username', function (req, res, next, username) {
 // Any valid route must start with "~username"
 router.all(['/~:username', '/~:username/*'], user_route);
 
-router.get('/icons/:icon', function (req, res) {
-    var options = {
-        root: app_dir + '/html/icons/',
-        dotfiles: 'deny',
-        headers: {
-            'x-timestamp': Date.now(),
-            'x-sent': true
-        }
-    };
 
-    res.sendFile(req.params.icon, options, function (err) {
-        if ( err ) {
-            res.sendStatus(err.statusCode);
-        }
-        else {
-            log.verbose("Successfully sent " + req.params.icon);
-        }
-    });
-});
-
-// Other routes are forbidden or not defined
-router.all('/', function(req, res) {
-    res.sendStatus(403)
-});
-
-router.all('*', function(req, res) {
-    res.sendStatus(404)
-});
-
-
-/*
- * Exporte module
+/**
+ * Export module
  **********************************************************************************************************************/
 
 module.exports = router;
