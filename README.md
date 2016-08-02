@@ -23,7 +23,7 @@
 
  - etc-nginx est un dossier bindé plutôt que juste certains fichiers pour permettre la mise à jour dans recréer les containers 
    ( quand le dev sera fini, passer aux fichiers )
- - traiter les people en ~ ( et sans ? )
+ - traiter les people en ~
  - pas grave si le node-proxy redémarre et ne stoppe plus les containers inutilisés : ils seront stoppés à la requête suivante + timeout
  - utiliser le node-proxy pour catch les GET /icons ( moche, archi à revoir... ) : beaucoup plus rapide que faire une requête en plus sur un apache
  - pour une image httpd : on utilise un AliasMatch dans le httpd.conf en plus mod_userdir qui nécessiterait /etc/passwd

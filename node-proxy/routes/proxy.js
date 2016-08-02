@@ -23,11 +23,13 @@ const docker_wrapper    = require('../local_modules/docker-wrapper');
 var timeout_id = {};
 
 // Get app directory
-var path = require('path');
+var path    = require('path');
 var app_dir = path.dirname(require.main.filename);
 
 
-/**********************************************************************************************************************/
+/*
+ * Defining useful functions
+ **********************************************************************************************************************/
 
 var route_user = function (user, req, res) {
 
@@ -55,7 +57,7 @@ var route_user = function (user, req, res) {
                 // Forward one more time client request
                 setTimeout( function () {
                     proxy.web(req, res, { target: target });
-                }, config.proxy.wait_after_refused);
+                }, config.proxy.wait_after_refused );
 
             } else {
                 throw err;
@@ -78,26 +80,44 @@ var update_timeout = function (user) {
         log.silly("Setting timeout for container " + docker_wrapper.get_user_container_name(user) + "");
     }
 
-    timeout_id[user.username] = setTimeout(function () {
-        docker_wrapper.stop_container(user);
-        delete timeout_id[user.username];
-    }, config.proxy.container_timeout);
+    timeout_id[user.username] = setTimeout( function () {
+                                    docker_wrapper.stop_container(user);
+                                    delete timeout_id[user.username];
+                                }, config.proxy.container_timeout );
 
 };
 
 
-/**********************************************************************************************************************/
+/*
+ * Defining router
+ **********************************************************************************************************************/
 
-// Any valid route must start with "~username" ( or "username" ? )
-router.all(['/~:username', '/~:username/*'], function (req, res) {
-    var username = req.params.username;
+router.param('username', function (req, res, next, username) {
 
-    // Check syntax
+    // Check username syntax according to a regex ( if defined in config.proxy.username_regex ).
+    // On Linux-based systems, usernames usually match /^[a-z_][a-z0-9_-]*[$]?$/.
+
     if (( config.proxy.username_regex !== undefined ) && ( ! username.match(config.proxy.username_regex) )) {
+
+        // If username doesn't match the username_regex, the app responds with a 400 error
+
         log.warn("Invalide username detected for " + username );
         res.sendStatus(400);
-        return;
+
+    } else {
+
+        // Else, it keeps going.
+        // Username is saved in req.username in case it is modified.
+
+        req.username = username;
+        next();
+
     }
+});
+
+// Any valid route must start with "~username"
+router.all(['/~:username', '/~:username/*'], function (req, res) {
+    var username = req.username;
 
     // Check if existing user matches username
     passwd_user(username).then( function (user) {
@@ -142,6 +162,8 @@ router.all('*', function(req, res) {
 });
 
 
-/**********************************************************************************************************************/
+/*
+ * Exporting module
+ **********************************************************************************************************************/
 
 module.exports = router;
