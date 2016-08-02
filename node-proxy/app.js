@@ -26,6 +26,8 @@ var fs = require('fs');
 app.use( morgan('combined', {stream: fs.createWriteStream('/var/log/node/access.log', {flags: 'a'})}) );
 app.use( morgan('dev') );
 
+var stop_users_containers = require('./local_modules/users-container').trigger_timeouts;
+
 
 // ROUTES FOR OUR API
 // =============================================================================
@@ -38,6 +40,7 @@ app.use('/', proxy_router);
 var server = app.listen( port, function () {
     log.info( "Magic happens on port " + port );
 }).on('close', function () {
+    stop_users_containers();
     log.info( "Magic just stopped" );
 });
 

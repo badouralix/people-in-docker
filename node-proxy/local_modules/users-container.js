@@ -101,11 +101,29 @@ var update_timeout = function (user) {
 
 };
 
+var trigger_timeouts = function () {
+
+    // This function forces users' containers launched to stop. Theses containers should have been stopped after a
+    // certain amount of ms ( defined in config.proxy.container_timeout ), with a setTimeout saved in the json object
+    // timeout_id. Timeouts are cleared and containers are stopped.
+
+    for ( var username in timeout_id ) {
+        clearTimeout(timeout_id[username]);
+
+        passwd_user(username).then(function (user) {
+            if (user !== undefined) {
+                docker_wrapper.stop_container(user);
+            }
+        });
+    }
+};
+
 
 /*
  * Exporte module
  **********************************************************************************************************************/
 
 module.exports = {
-    user_route: check_user
+    user_route: check_user,
+    trigger_timeouts: trigger_timeouts
 };

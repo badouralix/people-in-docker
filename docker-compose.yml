@@ -20,7 +20,7 @@ services:
 
   node-proxy:
     image: node:6.3
-    command: npm start
+    command: node app.js
     environment:
       - DOCKER_SOCKET=/var/run/docker.sock
       - PORT=8080
