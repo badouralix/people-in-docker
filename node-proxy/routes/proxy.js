@@ -3,6 +3,7 @@
  */
 'use strict';
 
+// Create new express router
 var express = require('express');
 var router  = express.Router();
 
@@ -18,6 +19,7 @@ var proxy       = http_proxy.createProxyServer({});
 
 const passwd_user       = require('passwd-user');
 const docker_wrapper    = require('../local_modules/docker-wrapper');
+const user_route        = require('../local_modules/users-container').user_route;
 
 // Create a global variable containing all timeout ids
 var timeout_id = {};
@@ -27,69 +29,9 @@ var path    = require('path');
 var app_dir = path.dirname(require.main.filename);
 
 
-/*
- * Defining useful functions
- **********************************************************************************************************************/
-
-var route_user = function (user, req, res) {
-
-    if ( user.uid < config.proxy.uid_min ) {
-        log.warn("User " + user.username + " is not supposed to be accessible -> aborting task!");
-        res.sendStatus(403);
-        return;
-    }
-
-    log.debug("User " + user.username + " has been found -> looking for container..." );
-    docker_wrapper.setup_container(user, function (err, ip) {
-        if ( err ) {
-            throw err;
-        }
-
-        var target = 'http://' + ip + ':80';
-        log.silly("Target for " + user.username + " is " + target);
-
-        proxy.web(req, res, { target: target }, function (err) {
-
-            if ( err.errno == 'ECONNREFUSED' ) {
-                // If connection is refused by user container, it may be due to the http server not started yet
-                log.warn("Unable to create connection with server at address " + err.address + ":" + err.port + " -> waiting " + config.proxy.wait_after_refused + "ms before trying again" );
-
-                // Forward one more time client request
-                setTimeout( function () {
-                    proxy.web(req, res, { target: target });
-                }, config.proxy.wait_after_refused );
-
-            } else {
-                throw err;
-            }
-        });
-
-    });
-
-    update_timeout(user);
-};
-
-var update_timeout = function (user) {
-
-    var container_name =  docker_wrapper.get_user_container_name(user);
-
-    if ( timeout_id.hasOwnProperty(user.username) ) {
-        log.silly("Updating timeout for container " + container_name);
-        clearTimeout(timeout_id[user.username]);
-    } else {
-        log.silly("Setting timeout for container " + docker_wrapper.get_user_container_name(user) + "");
-    }
-
-    timeout_id[user.username] = setTimeout( function () {
-                                    docker_wrapper.stop_container(user);
-                                    delete timeout_id[user.username];
-                                }, config.proxy.container_timeout );
-
-};
-
 
 /*
- * Defining router
+ * Define router
  **********************************************************************************************************************/
 
 router.param('username', function (req, res, next, username) {
@@ -116,21 +58,7 @@ router.param('username', function (req, res, next, username) {
 });
 
 // Any valid route must start with "~username"
-router.all(['/~:username', '/~:username/*'], function (req, res) {
-    var username = req.username;
-
-    // Check if existing user matches username
-    passwd_user(username).then( function (user) {
-        if ( user === undefined ) {
-            log.debug("No user " + username + " has been found -> aborting task!");
-            res.sendStatus(404);
-            return;
-        }
-
-        route_user(user, req, res);
-
-    });
-});
+router.all(['/~:username', '/~:username/*'], user_route);
 
 router.get('/icons/:icon', function (req, res) {
     var options = {
@@ -163,7 +91,7 @@ router.all('*', function(req, res) {
 
 
 /*
- * Exporting module
+ * Exporte module
  **********************************************************************************************************************/
 
 module.exports = router;
