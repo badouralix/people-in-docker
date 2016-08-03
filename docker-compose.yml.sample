@@ -14,7 +14,6 @@ services:
       - ./nginx-proxy/etc-nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx-proxy/etc-nginx/conf.d:/etc/nginx/conf.d:ro
       - ./nginx-proxy/etc-nginx/sites-enabled:/etc/nginx/sites-enabled:ro
-      - ./certs:/certs:ro
       - /etc/localtime:/etc/localtime:ro
       - nginx-proxy-log:/var/log/nginx
 

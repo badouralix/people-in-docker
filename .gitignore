@@ -1,7 +1,7 @@
 node-proxy/node-proxy.env
-certs/*
 nginx-proxy/etc-nginx/sites-enabled/*.conf
 node-proxy/node_modules/
 http-user/*
 !http-user/README.md
 !http-user/startup.sh.sample
+docker-compose.yml

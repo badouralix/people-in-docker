@@ -1,12 +1,3 @@
-## how-to
-
- - indiquer le bon path des certificats dans docker-compose.yml
- - éditer le node-proxy/node-proxy.env
- - ajouter les conf dans le sites-enabled du nginx-proxy
- - `npm install` dans node-proxy/
- - ajouter la conf dans le http-user et écrire le `startup.sh`
-
-
 ## issues
 
  - le problème du hot reload de /etc/passwd : supposons que l'on mette à jour /etc/passwd sur l'hôte,
@@ -31,7 +22,6 @@
 
 ## to-do
 
- - gérer les cas des containers created / pause / die etc...
  - ajouter un header au passage du proxy à vérifier dans le apache-user
  - faire une api permettant de récupérer la liste des user, les routes, etc...
  - proprifier la façon de récupérer le network name
@@ -56,6 +46,7 @@
  - ajouter la possibilité de mettre un robot.txt
  - ajouter une variable de config pour le workdir des user containers, pour le log dir, pour le dossier dans lequel est monté PEOPLE_SYNC_DIR
  - prendre en compte les custom entrypoint
+ - faire un script d'installation automatique
 
 
 ## done
@@ -79,6 +70,7 @@
  - utiliser un start-up script pour les apache-user pour bind le dossier contenant la conf, copier les fichiers et ensuite seulement démarrer apache
    ( parce que pour l'instant c'est statique, et il faut spawn un nouveau container pour charger la nouvelle conf... )
  - rendre le wrapper indépendant du serveur http des user ( attention à ce qui est écrit en dur... )
+ - gérer les cas des containers created / pause etc...
  
 
 ## left aside
