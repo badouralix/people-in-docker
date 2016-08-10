@@ -22,10 +22,14 @@ services:
     command: node app.js
     environment:
       - DOCKER_SOCKET=/var/run/docker.sock
-      - PORT=8080
+      - LOG_LEVEL=
+      - PEOPLE_CONTAINER_IMAGE=httpd:2.4-alpine
+      - PEOPLE_CONTAINER_LABELS_PREFIX=
+      - PEOPLE_CONTAINER_LOG_SUFFIX=-log
+      - PEOPLE_CONTAINER_PREFIX=people_user-
+      - PEOPLE_CMD=./startup.sh
       - PEOPLE_SYNC_DIR=$PWD/http-user
-    env_file:
-      - node-proxy/node-proxy.env
+      - PORT=8080
     expose:
       - "8080"
     networks:

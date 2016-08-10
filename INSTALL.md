@@ -15,10 +15,10 @@ To configure the stack :
    + configure the front proxy by adding conf in `sites-enabled/`
  - in `node-proxy/` :
    + run `npm install` to install modules
-   + copy `node-proxy.env.sample` to `node-proxy.env` and configure your environment 
-     ( pay particularly attention to `PEOPLE_CONTAINER_IMAGE` which contains the name of the image used for each user ; the image MUST be pulled before running the app )
 
- - rewrite `docker-compose.yml` to match your config ( add a volume for certificates for example )
+ - rewrite `docker-compose.yml` to match your config :
+   + configure your environment ( pay particularly attention to `PEOPLE_CONTAINER_IMAGE` which contains the name of the image used for each user ; the image MUST be pulled before running the app )
+   + add a volume for certificates if needed
 
 To run the stack :
 

@@ -1,4 +1,3 @@
-node-proxy/node-proxy.env
 nginx-proxy/etc-nginx/sites-enabled/*.conf
 node-proxy/node_modules/
 http-user/*
