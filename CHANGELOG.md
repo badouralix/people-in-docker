@@ -1,6 +1,7 @@
 ## Unversioned changes
 
  - Use EJS as templating language
+ - Use wait-on module to check users' containers health
 
 ## v0.3.1 - 02 August 2016
 ### REFACTORING

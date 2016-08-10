@@ -16,6 +16,7 @@ var http_proxy  = require('http-proxy');
 var proxy       = http_proxy.createProxyServer({});
 
 var passwd_user     = require('passwd-user');
+var wait_on         = require('wait-on');
 var docker_wrapper  = require('./docker-wrapper');
 
 // Create a global variable containing all timeout ids
@@ -59,28 +60,23 @@ var route_user = function (user, req, res) {
 			throw err;
 		}
 
-        var target = 'http://' + ip + ':80';
-        log.silly("Target for " + user.username + " is " + target);
+		var http_target = 'http://' + ip + ':80';
+		var tcp_target  = 'tcp:' + ip + ':80';
 
-        proxy.web(req, res, { target: target }, function (err) {
+		log.silly("Target for " + user.username + " is " + http_target);
 
-            if ( err.errno == 'ECONNREFUSED' ) {
-                // If connection is refused by user container, it may be due to the http server not started yet
-                log.warn("Unable to create connection with server at address " + err.address + ":" + err.port + " -> waiting " + config.proxy.wait_after_refused + "ms before trying again" );
+		// Wait for the targeted container to be ready and listening on port 80
+		wait_on({ resources: [tcp_target], interval: config.proxy.wait_after_refused, window: 0}, function (err) {
+			if ( err ) {
+				throw err;
+			}
 
-                // Forward one more time client request
-                setTimeout( function () {
-                    proxy.web(req, res, { target: target });
-                }, config.proxy.wait_after_refused );
+			// Forward client request to the targeted container
+			proxy.web(req, res, { target: http_target });
+		});
+	});
 
-            } else {
-                throw err;
-            }
-        });
-
-    });
-
-    update_timeout(user);
+	update_timeout(user);
 };
 
 var update_timeout = function (user) {
