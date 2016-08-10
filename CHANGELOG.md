@@ -1,3 +1,7 @@
+## Unversioned changes
+
+ - Use EJS as templating language
+
 ## v0.3.1 - 02 August 2016
 ### REFACTORING
 

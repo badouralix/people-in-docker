@@ -11,10 +11,13 @@
   "license": "ISC",
   "dependencies": {
     "dockerode": "^2.2.10",
+    "ejs": "^2.5.1",
     "express": "^4.14.0",
+    "express-robots": "^0.1.6",
     "http-proxy": "^1.14.0",
     "morgan": "^1.7.0",
     "passwd-user": "^2.1.0",
+    "serve-favicon": "^2.3.0",
     "winston": "^2.2.0"
   }
 }
