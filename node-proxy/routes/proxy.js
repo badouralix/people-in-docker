@@ -23,25 +23,25 @@ const user_route = require('../local_modules/users-container').user_route;
 
 router.param('username', function (req, res, next, username) {
 
-    // Check username syntax according to a regex ( if defined in config.proxy.username_regex ).
-    // On Linux-based systems, usernames usually match /^[a-z_][a-z0-9_-]*[$]?$/.
+	// Check username syntax according to a regex ( if defined in config.proxy.username_regex ).
+	// On Linux-based systems, usernames usually match /^[a-z_][a-z0-9_-]*[$]?$/.
 
-    if (( config.proxy.username_regex !== undefined ) && ( ! username.match(config.proxy.username_regex) )) {
+	if (( config.proxy.username_regex !== undefined ) && ( ! username.match(config.proxy.username_regex) )) {
 
-        // If username doesn't match the username_regex, the app responds with a 400 error
+		// If username doesn't match the username_regex, the app responds with a 400 error
 
-        log.warn("Invalide username detected for " + username );
-        res.sendStatus(400);
+		log.warn("Invalide username detected for " + username );
+		res.sendStatus(400);
 
-    } else {
+	} else {
 
-        // Else, it keeps going.
-        // Username is saved in req.username in case it is modified.
+		// Else, it keeps going.
+		// Username is saved in req.username in case it is modified.
 
-        req.username = username;
-        next();
+		req.username = username;
+		next();
 
-    }
+	}
 });
 
 // Any valid route must start with "~username"
