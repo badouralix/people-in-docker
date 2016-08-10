@@ -1,4 +1,4 @@
-# prerequisite
+## prerequisite
 
  - `git`
  - `npm`

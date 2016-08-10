@@ -1,1 +1,3 @@
-Dossier contenant la conf du serveur http propre à chaque user
+## Content
+
+This folders contains the config files of the back-end server running within each user's Docker container.
