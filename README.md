@@ -17,3 +17,8 @@ This project is divided in three parts, corresponding to the three subfolders :
 ## Installation
 
 See [INSTALL.md](INSTALL.md)
+
+
+## License
+
+All contents licensed under the [WTFPL](LICENSE)
