@@ -10,7 +10,7 @@
   "author": "Ayaz BADOURALY <ayaz.badouraly@via.ecp.fr>",
   "license": "ISC",
   "dependencies": {
-    "dockerode": "^2.2.10",
+    "dockerode": "^2.3.0",
     "ejs": "^2.5.1",
     "express": "^4.14.0",
     "express-robots": "^0.1.6",

@@ -20,7 +20,7 @@ if (!stats.isSocket()) {
 }
 var docker = new Docker({ socketPath: socket });
 
-// Get network of the node container #L91 ( needs to improve... )
+// Get network of the node container #L113 ( needs to improve... )
 var network_name = '';
 docker.getContainer(process.env.HOSTNAME).inspect( function (err, data) {
 	network_name = data.HostConfig.NetworkMode;
@@ -47,7 +47,14 @@ var setup_container = function (user, callback) {
 
 		if ( data == null ) {
 			// Container does not exist
-			create_container(container_name, user, callback)
+			setup_image( function (err) {
+				if (err) {
+					throw err;
+				}
+
+				create_container(container_name, user, callback);
+			});
+
 
 		} else if ( data.State.Running == false ) {
 			// Container is stopped
@@ -118,6 +125,48 @@ var create_container = function (container_name, user, callback) {
 	});
 };
 
+var setup_image = function (callback) {
+	var image_name = config.docker.image_name;
+	log.silly("Checking image " + image_name);
+
+	var image = docker.getImage(image_name);
+	image.inspect( function (err, data) {
+
+		if ( err && err.statusCode == 404 ) {
+
+			// The image image_name hasn't been found and must be pulled
+			pull_image(image_name, callback)
+
+		} else {
+
+			// The image image_name has been found or the error can't be handled here
+			callback(err);
+
+		}
+	});
+};
+
+var pull_image = function (image_name, callback) {
+	log.info("Pulling image " + image_name);
+
+	docker.pull(image_name, function (err, stream) {
+		if ( err ) {
+			callback(err);
+		}
+
+		docker.modem.followProgress(stream, on_finished);
+
+		function on_finished(err, output) {
+			if ( err ) {
+				callback(err);
+			}
+
+			log.silly("Image " + image_name + " has been successfully pulled \\o/");
+			callback(null);
+		}
+	})
+};
+
 var get_ip_from_container = function (container, callback) {
 	container.inspect( function (err, data) {
 		if ( err ) {
@@ -133,7 +182,7 @@ var get_ip_from_data = function (data, callback) {
 	var networks = data.NetworkSettings.Networks;
 
 	if ( Object.keys(networks).length != 1 ) {
-		callback( "An error occured while parsing networks of container " + container_id + " ( probably too many networks )", null );
+		callback( new Error("An error occured while parsing networks of container " + container_id + " ( probably too many networks )"), null );
 	} else {
 		callback( null, networks[Object.keys(networks)[0]].IPAddress );
 	}
@@ -146,8 +195,7 @@ var stop_container = function (user) {
 	var container = docker.getContainer(container_name);
 	container.inspect( user, function (err, data) {
 		if ( err ) {
-			//throw( err );
-			// create_container(container_name, user, callback); // needs to pay attention to 404 error response from docker api
+			throw( err );
 		}
 
 		if ( data.State.Running == true ) {

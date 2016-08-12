@@ -2,6 +2,7 @@
 
  - Use EJS as templating language
  - Use wait-on module to check users' containers health
+ - Pull docker image if not exists
 
 ## v0.3.1 - 02 August 2016
 ### REFACTORING
