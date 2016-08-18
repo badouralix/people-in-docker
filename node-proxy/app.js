@@ -53,6 +53,14 @@ app.use( express.static(path.join(__dirname, 'public')) );
 
 app.use( proxy_router );
 
+// This is the last non-error-handling middleware use()d. Since nothing else responded, we assume 404.
+app.use( function (req, res, next) {
+	var err = new Error("Not found");
+	err.status = 404;
+
+	next(err);
+});
+
 
 /**
  * Error handling
