@@ -45,7 +45,7 @@ router.param('username', function (req, res, next, username) {
 });
 
 // Any valid route must start with "~username"
-router.all(['/~:username', '/~:username/*'], user_route);
+router.all('/~:username*', user_route);
 
 
 /**

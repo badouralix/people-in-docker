@@ -47,10 +47,11 @@ app.set('view engine', 'ejs');
 /**
  * Configure routes
  **********************************************************************************************************************/
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(robots(path.join(__dirname, 'public', 'robots.txt')));
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/', proxy_router);
+app.use( favicon(path.join(__dirname, 'public', 'favicon.ico')) );
+app.use( robots(path.join(__dirname, 'public', 'robots.txt')) );
+app.use( express.static(path.join(__dirname, 'public')) );
+
+app.use( proxy_router );
 
 
 /**
