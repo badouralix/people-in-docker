@@ -23,6 +23,7 @@ services:
     environment:
       - DOCKER_SOCKET=/var/run/docker.sock
       - LOG_LEVEL=
+      - NODE_ENV=production
       - PEOPLE_CONTAINER_IMAGE=httpd:2.4-alpine
       - PEOPLE_CONTAINER_LABELS_PREFIX=
       - PEOPLE_CONTAINER_LOG_SUFFIX=-log

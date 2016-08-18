@@ -30,8 +30,11 @@ router.param('username', function (req, res, next, username) {
 
 		// If username doesn't match the username_regex, the app responds with a 400 error
 
-		log.warn("Invalide username detected for " + username );
-		res.sendStatus(400);
+		log.warn("Invalid username detected for " + username );
+
+		var err = new Error("Invalid username");
+		err.status = 400;
+		return next(err);
 
 	} else {
 

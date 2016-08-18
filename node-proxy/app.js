@@ -55,6 +55,35 @@ app.use( proxy_router );
 
 
 /**
+ * Error handling
+ **********************************************************************************************************************/
+
+// Development error handler
+// Will print stacktrace
+if ( app.get('env') === 'development' ) {
+
+	app.use( function(err, req, res, next) {
+		res.status(err.status || 500);
+		res.render('error', {
+			message: err.message,
+			error: err
+		});
+	});
+
+}
+
+// Production error handler
+// No stacktraces leaked to user
+app.use( function(err, req, res, next) {
+	res.status(err.status || 500);
+	res.render('error', {
+		message: err.message,
+		error: {}
+	});
+});
+
+
+/**
  * Start the server
  **********************************************************************************************************************/
 var server = app.listen( port, function () {

@@ -49,7 +49,7 @@ var setup_container = function (user, callback) {
 			// Container does not exist
 			setup_image( function (err) {
 				if (err) {
-					throw err;
+					return callback(err);
 				}
 
 				create_container(container_name, user, callback);
@@ -118,7 +118,7 @@ var create_container = function (container_name, user, callback) {
 
 	docker.createContainer( create_options, function (err, container) {
 		if ( err ) {
-			throw err;
+			return callback(err);
 		}
 
 		start_container(container, container_name, callback);
@@ -158,11 +158,11 @@ var pull_image = function (image_name, callback) {
 
 		function on_finished(err, output) {
 			if ( err ) {
-				callback(err);
+				return callback(err);
 			}
 
 			log.silly("Image " + image_name + " has been successfully pulled \\o/");
-			callback(null);
+			return callback(null);
 		}
 	})
 };
@@ -170,7 +170,7 @@ var pull_image = function (image_name, callback) {
 var get_ip_from_container = function (container, callback) {
 	container.inspect( function (err, data) {
 		if ( err ) {
-			throw err;
+			return callback(err);
 		}
 
 		get_ip_from_data(data, callback);
@@ -182,20 +182,20 @@ var get_ip_from_data = function (data, callback) {
 	var networks = data.NetworkSettings.Networks;
 
 	if ( Object.keys(networks).length != 1 ) {
-		callback( new Error("An error occured while parsing networks of container " + container_id + " ( probably too many networks )"), null );
+		return callback( new Error("An error occured while parsing networks of container " + container_id + " ( probably too many networks )") );
 	} else {
-		callback( null, networks[Object.keys(networks)[0]].IPAddress );
+		return callback( null, networks[Object.keys(networks)[0]].IPAddress );
 	}
 };
 
-var stop_container = function (user) {
+var stop_container = function (user, callback) {
 	var container_name = get_user_container_name(user);
 	log.info("Stopping container " + container_name);
 
 	var container = docker.getContainer(container_name);
 	container.inspect( user, function (err, data) {
 		if ( err ) {
-			throw( err );
+			return callback(err);
 		}
 
 		if ( data.State.Running == true ) {
