@@ -37,7 +37,11 @@ var app = express();
 
 // Use morgan to print logs
 app.use( morgan('combined', {stream: fs.createWriteStream('/var/log/node/access.log', {flags: 'a'})}) );
-app.use( morgan('dev') );
+if ( app.get('env') === 'development' ) {
+	app.use( morgan('dev') );
+} else {
+	app.use( morgan('combined') );
+}
 
 // Setup view engine
 app.set('views', path.join(__dirname, 'views'));
